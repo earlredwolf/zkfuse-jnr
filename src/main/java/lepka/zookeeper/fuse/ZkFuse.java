@@ -30,9 +30,9 @@ public class ZkFuse extends FuseStubFS {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZkFuse.class);
 
-    private ZkFuse(String connectionString) {
+    private ZkFuse(String connectionString,String zPath) {
         curator = CuratorFrameworkFactory.newClient(connectionString, new ExponentialBackoffRetry(1000, 5));
-        cache = new TreeCache(curator, "/");
+        cache = new TreeCache(curator, zPath);
     }
 
     @Override
@@ -183,14 +183,15 @@ public class ZkFuse extends FuseStubFS {
     }
 
     public static void main(String... args) {
-        if (args.length < 2) {
-            LOGGER.error("usage: java -jar ZkFuse.jar [connectString] [mountPoint]");
+        if (args.length < 3) {
+            LOGGER.error("usage: java -jar ZkFuse.jar [connectString] [znodePath] [mountPoint]");
             System.exit(1);
         }
-        ZkFuse stub = new ZkFuse(args[0]);
+
+        ZkFuse stub = new ZkFuse(args[0],args[1]);
 
         try {
-            stub.mount(Paths.get(args[1]), true);
+            stub.mount(Paths.get(args[2]), true);
         } finally {
             stub.umount();
         }

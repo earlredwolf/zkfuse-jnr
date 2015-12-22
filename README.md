@@ -1,5 +1,5 @@
 # zkfuse-jnr
 Zookeeper fuse client
 
-    usage: java -jar ZkFuse.jar [connectString] [mountPoint]
+    usage: java -jar ZkFuse.jar [connectString] [znodePath] [mountPoint]
 
